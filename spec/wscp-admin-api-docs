@@ -1,0 +1,4324 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API documentation for the WaveSuite Admin.",
+        "version": "1.0.0",
+        "title": "WaveSuite Admin API",
+        "license": {}
+    },
+    "basePath": "/wavesuite/cp/admin",
+    "tags": [
+        {
+            "name": "Activity",
+            "description": "The activity API"
+        },
+        {
+            "name": "Authentication",
+            "description": "The authentication API"
+        },
+        {
+            "name": "BackupRestoreStrategies",
+            "description": "the backup-restore-strategies API"
+        },
+        {
+            "name": "Backups",
+            "description": "the backups API"
+        },
+        {
+            "name": "Clients",
+            "description": "the clients API"
+        },
+        {
+            "name": "Containers",
+            "description": "the containers API"
+        },
+        {
+            "name": "Files",
+            "description": "the files API"
+        },
+        {
+            "name": "License",
+            "description": "the license API"
+        },
+        {
+            "name": "Restore",
+            "description": "the restore API"
+        },
+        {
+            "name": "Roles",
+            "description": "the roles API"
+        },
+        {
+            "name": "Server",
+            "description": "the server API"
+        },
+        {
+            "name": "Settings",
+            "description": "the settings API"
+        },
+        {
+            "name": "Status",
+            "description": "the status API"
+        },
+        {
+            "name": "TransactionService",
+            "description": "the Transaction Service API"
+        },
+        {
+            "name": "User Account",
+            "description": "the user-account API"
+        },
+        {
+            "name": "Users",
+            "description": "the users API"
+        },
+        {
+            "name": "Warnings",
+            "description": "the warnings API"
+        }
+    ],
+    "paths": {
+        "/api/v1/activity/": {
+            "get": {
+                "tags": [
+                    "Activity"
+                ],
+                "summary": "Get the activity for a given user",
+                "description": "Get the activity for a given user",
+                "operationId": "getActivityUsingGET",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "The start page",
+                        "required": false,
+                        "type": "integer",
+                        "default": 0,
+                        "format": "int32"
+                    },
+                    {
+                        "name": "length",
+                        "in": "query",
+                        "description": "The length of result",
+                        "required": false,
+                        "type": "integer",
+                        "default": 15,
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "The sort key word",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "The sort direction",
+                        "required": false,
+                        "type": "string",
+                        "default": "asc",
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ]
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of events",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/activity/licenseEvents": {
+            "get": {
+                "tags": [
+                    "Activity"
+                ],
+                "summary": "Get license events.",
+                "description": "Get license events.",
+                "operationId": "getLicenseEventsUsingGET",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of License Events",
+                        "schema": {
+                            "$ref": "#/definitions/Event"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "The License Events do not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Event"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "X-Auth-Token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/authenticate": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Authenticates a user given an email and password",
+                "description": "Authenticates a user given an email and password \n NOTE: To use the authentication token, it must be in the form of \"Bearer \\<token\\>\" \n Example: Bearer eyJhbGciOiJSUzI1NiIsInR5... ",
+                "operationId": "authenticateUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "request",
+                        "description": "Request an access token by supplying the user's email and password.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AuthenticationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The user's access token and general info.",
+                        "schema": {
+                            "$ref": "#/definitions/AuthenticationResponse"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/backup-restore-strategies": {
+            "get": {
+                "tags": [
+                    "BackupRestoreStrategies"
+                ],
+                "summary": "Get a list of backup strategies",
+                "description": "Obtain a list of backup strategies of registered applications",
+                "operationId": "getStrategy",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "applicationName",
+                        "in": "query",
+                        "description": "The applicationName of the strategy to get",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BackupRestoreStrategy"
+                        }
+                    },
+                    "400": {
+                        "description": "Could not get the list"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/backup-restore-strategies/{strategyId}": {
+            "put": {
+                "tags": [
+                    "BackupRestoreStrategies"
+                ],
+                "summary": "Update an applications backup/restore strategy",
+                "description": "Updates a backup restore strategy for an application",
+                "operationId": "updateStrategy",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "strategyId",
+                        "in": "path",
+                        "description": "The strategy ID of the strategy to update",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Application's strategy for backup restore",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/BackupRestoreStrategy"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BackupRestoreStrategy"
+                        }
+                    },
+                    "201": {
+                        "description": "Backup restore strategy successfully updated",
+                        "schema": {
+                            "$ref": "#/definitions/BackupRestoreStrategy"
+                        }
+                    },
+                    "400": {
+                        "description": "Could not update the backup restore strategy"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/backups": {
+            "get": {
+                "tags": [
+                    "Backups"
+                ],
+                "summary": "Obtain a list of backups",
+                "description": "Obtain a list of backups that are available",
+                "operationId": "listBackups",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "applicationName",
+                        "in": "query",
+                        "description": "The name of the application",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BackupInfo"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Could not get the list"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Backups"
+                ],
+                "summary": "Creates a backup",
+                "description": "Create a backup for the application that request it",
+                "operationId": "createBackup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "description",
+                        "description": "The description of the backup file.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "optionalOperations",
+                        "in": "query",
+                        "description": "The optional operations to be done for the backup.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BackupInfo"
+                        }
+                    },
+                    "201": {
+                        "description": "Acknowleged that a backup was created",
+                        "schema": {
+                            "$ref": "#/definitions/BackupInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Backup could not be made"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/backups/cancel": {
+            "post": {
+                "tags": [
+                    "Backups"
+                ],
+                "summary": "Cancel current backup",
+                "operationId": "cancelBackup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "204": {
+                        "description": "successful canceled the backup"
+                    },
+                    "400": {
+                        "description": "Unable to cancel the backup"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/backups/files": {
+            "get": {
+                "tags": [
+                    "Backups"
+                ],
+                "summary": "Get a backup",
+                "operationId": "getBackup",
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "parameters": [
+                    {
+                        "name": "applicationName",
+                        "in": "query",
+                        "description": "The name of the application that the backup is for",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "backupFilename",
+                        "in": "query",
+                        "description": "The name of the backup filename that is to be retrieved",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful downloaded the backup",
+                        "schema": {
+                            "type": "string",
+                            "format": "byte"
+                        }
+                    },
+                    "400": {
+                        "description": "Backup file could not be obtained"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Backups"
+                ],
+                "summary": "Upload a backup",
+                "operationId": "uploadBackup",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "backupFile",
+                        "in": "formData",
+                        "description": "backupFile",
+                        "required": false,
+                        "type": "file"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BackupInfo"
+                        }
+                    },
+                    "201": {
+                        "description": "Acknowleged that a backup was created",
+                        "schema": {
+                            "$ref": "#/definitions/BackupInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/backups/files/{applicationName}/{backupFilename}": {
+            "delete": {
+                "tags": [
+                    "Backups"
+                ],
+                "summary": "Delete a backup by a filename",
+                "operationId": "deleteBackup",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "applicationName",
+                        "in": "path",
+                        "description": "The name of the applicationName that the backup is for",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "backupFilename",
+                        "in": "path",
+                        "description": "The name of the file that is to be deleted",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "successful deletion"
+                    },
+                    "400": {
+                        "description": "Backup file could not be deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/backups/status": {
+            "get": {
+                "tags": [
+                    "Status"
+                ],
+                "summary": "Obtain current status of backup or restore operations",
+                "operationId": "getStatus",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/BackupStatus"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/client-registration": {
+            "post": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Registers a new client / application with WaveSuite.",
+                "description": "Registers a new client / application with WaveSuite. Clients registering will require an initial access token provided by the WaveSuite administrator.",
+                "operationId": "registerClient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Initial-Access-Token",
+                        "in": "header",
+                        "description": "The initial access token used for registration",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "client",
+                        "description": "The client to register",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Client"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Client"
+                        }
+                    },
+                    "201": {
+                        "description": "Client successfully created.",
+                        "schema": {
+                            "$ref": "#/definitions/Client"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clients/public-clients": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Get a list of public clients",
+                "description": "Get a list of public clients",
+                "operationId": "getPublicClients",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of public clients",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Client"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/clients/{clientId}": {
+            "put": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Updates a client.",
+                "description": "Updates a client.",
+                "operationId": "updateClient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "The client ID to be updated",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "client",
+                        "description": "The updated user.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Client"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Client successfully updated.",
+                        "schema": {
+                            "$ref": "#/definitions/Client"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Client could not be updated."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Client not found."
+                    },
+                    "409": {
+                        "description": "Client conflict."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/containers/{containerName}/start": {
+            "post": {
+                "tags": [
+                    "Containers"
+                ],
+                "summary": "Start a container",
+                "description": "Start a container",
+                "operationId": "startContainer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "containerName",
+                        "in": "path",
+                        "description": "containerName",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "204": {
+                        "description": "The container started"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/files": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Get a list of files",
+                "description": "Get a list of files",
+                "operationId": "getFiles",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "fileType",
+                        "in": "query",
+                        "description": "File type",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Provide a list of file names",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FileInfo"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/files/file": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Get the file",
+                "description": "Get the file",
+                "operationId": "getFile",
+                "produces": [
+                    "application/octet-stream",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "fileType",
+                        "in": "query",
+                        "description": "File type",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "The name of the file",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully downloaded the file",
+                        "schema": {
+                            "type": "string",
+                            "format": "byte"
+                        }
+                    },
+                    "400": {
+                        "description": "File could not be obtained"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload a file",
+                "operationId": "upload",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "fileType",
+                        "in": "query",
+                        "description": "File type",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "description": "file detail",
+                        "required": false,
+                        "type": "file"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "201": {
+                        "description": "Successfully uploaded the file",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Delete the file",
+                "description": "Delete the file",
+                "operationId": "deleteFile",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "fileType",
+                        "in": "query",
+                        "description": "File type",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "The name of the file",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "Successfully deleted the file"
+                    },
+                    "400": {
+                        "description": "The file could not be deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/files/management": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Get the file management information",
+                "description": "Get the file management information",
+                "operationId": "getFileManagement",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Provide a list of file management types",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FileManagementConfig"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/license": {
+            "get": {
+                "tags": [
+                    "License"
+                ],
+                "summary": "Get server license information",
+                "description": "Provides basic information about the server license",
+                "operationId": "getLicenseInfo",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Provide server license information.",
+                        "schema": {
+                            "$ref": "#/definitions/LicenseInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "License"
+                ],
+                "summary": "Adds or updates a license file",
+                "description": "Adds or updates a base64 encoded license file",
+                "operationId": "saveLicense",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "licenseUploadRequest",
+                        "description": "The encoded license to save.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LicenseUploadRequest"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/LicenseInfo"
+                        }
+                    },
+                    "201": {
+                        "description": "License successfully saved.",
+                        "schema": {
+                            "$ref": "#/definitions/LicenseInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "License could not be saved."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Revokes an existing access token.",
+                "description": "Revokes an existing access token.",
+                "operationId": "logoutUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "request",
+                        "description": "request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LogoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "204": {
+                        "description": "User successfully logged out"
+                    },
+                    "400": {
+                        "description": "The user could not be logged out."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/restore": {
+            "post": {
+                "tags": [
+                    "Restore"
+                ],
+                "summary": "Restore a backup",
+                "description": "Restore a backup",
+                "operationId": "restore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Backup info of backup in which to restore",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/BackupInfo"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Backup successfully restored"
+                    },
+                    "400": {
+                        "description": "Could not restore the backup"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get a list of user roles that have been registered",
+                "description": "Get a list of user roles that have been registered",
+                "operationId": "getRoles",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of user roles that have been registered",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Role"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/server/info": {
+            "get": {
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Get server information",
+                "description": "Provides basic information about the server.",
+                "operationId": "getInfo",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Provide system information.",
+                        "schema": {
+                            "$ref": "#/definitions/ServerInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/server/swagger-docs-status": {
+            "get": {
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Find out if the Swagger Documentation is enabled",
+                "description": "Indicates if the Swagger Documentation is enabled",
+                "operationId": "getSwaggerDocsStatus",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indicate if the swagger documentation is enabled.",
+                        "schema": {
+                            "$ref": "#/definitions/SwaggerDocsStatus"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get Settings",
+                "description": "Get Settings",
+                "operationId": "getSettings",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of Settings",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Updates settings",
+                "description": "Updates settings",
+                "operationId": "updateSettings",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "settings",
+                        "description": "The updated settings.",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Setting"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Settings",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Setting"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/settings/dhcp-host-interfaces": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get DHCP Host Interfaces",
+                "description": "Get DHCP Host Interfaces",
+                "operationId": "getDhcpHostInterfaces",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of DHCP Host Interfaces",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/NetworkInterface"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/settings/external-links": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get list of External Links.",
+                "description": "Get list of External Links.",
+                "operationId": "getExternalLinks",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of External Links.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ExternalLink"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Add a new External Link.",
+                "description": "Add a new External Link.",
+                "operationId": "addExternalLink",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "externalLink",
+                        "description": "externalLink",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ExternalLink"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ExternalLink"
+                        }
+                    },
+                    "201": {
+                        "description": "External Link added.",
+                        "schema": {
+                            "$ref": "#/definitions/ExternalLink"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/settings/external-links/{externalLinkId}": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get a specific External Link.",
+                "description": "Get a specific External Link.",
+                "operationId": "getExternalLink",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "externalLinkId",
+                        "in": "path",
+                        "description": "externalLinkId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The External Link.",
+                        "schema": {
+                            "$ref": "#/definitions/ExternalLink"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "External Link does not exist."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Update an External Link.",
+                "description": "Update an External Link.",
+                "operationId": "updateExternalLink",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "externalLinkId",
+                        "in": "path",
+                        "description": "externalLinkId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "newLink",
+                        "description": "newLink",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ExternalLink"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "External Link updated.",
+                        "schema": {
+                            "$ref": "#/definitions/ExternalLink"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "External Link not found.",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Delete an External Link.",
+                "description": "Delete an External Link.",
+                "operationId": "deleteExternalLink",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "externalLinkId",
+                        "in": "path",
+                        "description": "externalLinkId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "External Link deleted."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "External Link does not exist."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/settings/testSMTPConnection": {
+            "post": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Test SMTP Connection",
+                "description": "Test SMTP Connection",
+                "operationId": "testSMTPConnection",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "config",
+                        "description": "config",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "204": {
+                        "description": "SMTP Connection successful"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/transactions/start": {
+            "post": {
+                "tags": [
+                    "TransactionService"
+                ],
+                "summary": "Start transaction processing",
+                "description": "Start transaction processing",
+                "operationId": "startTransactions",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "202": {
+                        "description": "Starting Transaction processing."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/transactions/status": {
+            "get": {
+                "tags": [
+                    "TransactionService"
+                ],
+                "summary": "Get the current state of the transaction service",
+                "description": "Check whether transactions are currently stopped",
+                "operationId": "transactionStatus",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "State of transactions service.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/transactions/stop": {
+            "post": {
+                "tags": [
+                    "TransactionService"
+                ],
+                "summary": "Stop transaction processing",
+                "description": "Refuse all future incoming transactions until start is invoked. In process transaction will finish.",
+                "operationId": "stopTransactions",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "202": {
+                        "description": "Stopping Transaction processing."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user-account": {
+            "get": {
+                "tags": [
+                    "User Account"
+                ],
+                "summary": "getUserAccount",
+                "description": "Get the current User account",
+                "operationId": "getUserAccount",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The current User account",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Account"
+                ],
+                "summary": "Updates the current User account",
+                "description": "Updates the current User account.",
+                "operationId": "updateUserAccount",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "description": "The updated user.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "201": {
+                        "description": "User account successfully updated.",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "User could not be updated."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "User not found."
+                    },
+                    "409": {
+                        "description": "User account conflict."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user-account/preferences": {
+            "get": {
+                "tags": [
+                    "User Account"
+                ],
+                "summary": "getPreferences",
+                "description": "Retrieves user preferences",
+                "operationId": "getPreferences",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "the user's preferences",
+                        "schema": {
+                            "$ref": "#/definitions/UserPreferences"
+                        }
+                    },
+                    "400": {
+                        "description": "preferences could not be fetched",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "user could not be found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Account"
+                ],
+                "summary": "updatePreferences",
+                "description": "updates user preferences",
+                "operationId": "updatePreferences",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "userPreferences",
+                        "description": "new user preferences to be saved",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserPreferences"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UserPreferences"
+                        }
+                    },
+                    "201": {
+                        "description": "User preferences successfully updated.",
+                        "schema": {
+                            "$ref": "#/definitions/UserPreferences"
+                        }
+                    },
+                    "400": {
+                        "description": "User preferences could not be updated."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "User not found."
+                    },
+                    "409": {
+                        "description": "User account conflict."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get Users",
+                "description": "Get Users",
+                "operationId": "getUsers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "searchParams",
+                        "in": "query",
+                        "description": "The searchParams query parameter can be used to filter results. The format is name:<Name>&&email:<Email>\" OR \"name:<Name>||email:<Email>",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "The start page",
+                        "required": false,
+                        "type": "integer",
+                        "default": 0,
+                        "format": "int32"
+                    },
+                    {
+                        "name": "length",
+                        "in": "query",
+                        "description": "The length of result",
+                        "required": false,
+                        "type": "integer",
+                        "default": 15,
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "The sort key word",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "The sort direction",
+                        "required": false,
+                        "type": "string",
+                        "default": "asc",
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ]
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of Users",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new User",
+                "description": "Create a new User.",
+                "operationId": "addUser",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "description": "The user to create.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "201": {
+                        "description": "User successfully created.",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/bulk": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create new users",
+                "description": "Create new users.",
+                "operationId": "addUsers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The users to create.",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users successfully created.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{userId}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a user",
+                "description": "Get the user with the specific identifier if it exists",
+                "operationId": "getUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The id of the user",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A User",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "The User does not exist."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Updates an existing User",
+                "description": "Updates an existing User.",
+                "operationId": "updateUser",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The updated user.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The id of the user to be updated.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "201": {
+                        "description": "User successfully created.",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "User could not be created."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "User not found."
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Deletes an existing User",
+                "description": "Deletes an existing User.",
+                "operationId": "deleteUser",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The user ID to delete.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "user successfully deleted."
+                    },
+                    "400": {
+                        "description": "user could not be deleted."
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{userId}/reset-password": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Reset the user's password",
+                "description": "Reset the user's password",
+                "operationId": "resetPassword",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The ID of the user",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token. Ensure that 'bearer' is included ahead of the token itself.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "204": {
+                        "description": "Successfully sent password reset email."
+                    },
+                    "401": {
+                        "description": "Unauthorized."
+                    },
+                    "403": {
+                        "description": "The user's password cannot be changed.",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    },
+                    "404": {
+                        "description": "The user does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to send password reset email..",
+                        "schema": {
+                            "$ref": "#/definitions/ModelError"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/warnings": {
+            "get": {
+                "tags": [
+                    "Warnings"
+                ],
+                "summary": "Get warnings",
+                "description": "Get warnings",
+                "operationId": "getWarnings",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of warnings",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Warning"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "ApplicationInfo": {
+            "type": "object",
+            "properties": {
+                "applicationName": {
+                    "type": "string",
+                    "description": "unique name of an application",
+                    "allowEmptyValue": false
+                },
+                "applicationVersion": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "ApplicationInfo"
+        },
+        "ApplicationPreferences": {
+            "type": "object",
+            "properties": {
+                "columns": {
+                    "type": "object",
+                    "allowEmptyValue": false,
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Column"
+                        }
+                    }
+                },
+                "version": {
+                    "type": "integer",
+                    "format": "int32",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "ApplicationPreferences",
+            "description": "null"
+        },
+        "AuthenticationRequest": {
+            "type": "object",
+            "properties": {
+                "clientId": {
+                    "type": "string"
+                },
+                "clientSecret": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "realm": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "AuthenticationRequest"
+        },
+        "AuthenticationResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "description": "The authentication token.",
+                    "allowEmptyValue": false
+                },
+                "expires_in": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The expiry date in milliseconds",
+                    "allowEmptyValue": false
+                },
+                "not-before-policy": {
+                    "type": "integer",
+                    "format": "int64",
+                    "allowEmptyValue": false
+                },
+                "refresh_expires_in": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The expiry date in milliseconds",
+                    "allowEmptyValue": false
+                },
+                "refresh_token": {
+                    "type": "string",
+                    "description": "The refresh authentication token.",
+                    "allowEmptyValue": false
+                },
+                "scope": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "session_state": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "token_type": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "AuthenticationResponse"
+        },
+        "BackupInfo": {
+            "type": "object",
+            "properties": {
+                "applicationInfo": {
+                    "allowEmptyValue": false,
+                    "$ref": "#/definitions/ApplicationInfo"
+                },
+                "description": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "filename": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "forcedBackup": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "size": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "timestamp": {
+                    "type": "integer",
+                    "format": "int64",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "BackupInfo"
+        },
+        "BackupRestoreStrategy": {
+            "type": "object",
+            "properties": {
+                "applicationName": {
+                    "type": "string",
+                    "description": "The application name of the backup file. (IE. 'wavesuite')",
+                    "allowEmptyValue": false
+                },
+                "applicationVersion": {
+                    "type": "string",
+                    "description": "The application version.",
+                    "allowEmptyValue": false
+                },
+                "backupStrategy": {
+                    "description": "The backup strategy object. Contains required data for performing backup operations.",
+                    "allowEmptyValue": false,
+                    "$ref": "#/definitions/Strategy"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "UUID of the backup file.",
+                    "allowEmptyValue": false
+                },
+                "restoreStrategy": {
+                    "description": "The restore strategy object. Contains required data for performing restore operations.",
+                    "allowEmptyValue": false,
+                    "$ref": "#/definitions/Strategy"
+                }
+            },
+            "title": "BackupRestoreStrategy"
+        },
+        "BackupStatus": {
+            "type": "object",
+            "properties": {
+                "inProgress": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "operationName": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "step": {
+                    "type": "integer",
+                    "format": "int32",
+                    "allowEmptyValue": false
+                },
+                "stepName": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "totalSteps": {
+                    "type": "integer",
+                    "format": "int32",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "BackupStatus"
+        },
+        "Client": {
+            "type": "object",
+            "properties": {
+                "adminUrl": {
+                    "type": "string"
+                },
+                "attributes": {
+                    "type": "object",
+                    "allowEmptyValue": false,
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "authenticationFlowBindingOverrides": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "authorizationServicesEnabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "backupRestoreStrategy": {
+                    "$ref": "#/definitions/BackupRestoreStrategy"
+                },
+                "baseUrl": {
+                    "type": "string"
+                },
+                "bearerOnly": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "clientAuthenticatorType": {
+                    "type": "string"
+                },
+                "clientId": {
+                    "type": "string"
+                },
+                "clientSettings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Setting"
+                    }
+                },
+                "consentRequired": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "defaultClientScopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "defaultRoles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "directAccessGrantsEnabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "directGrantsOnly": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "fileManagementConfig": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/FileManagementConfig"
+                    }
+                },
+                "frontchannelLogout": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "fullScopeAllowed": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "id": {
+                    "type": "string"
+                },
+                "implicitFlowEnabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nodeReRegistrationTimeout": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "notBefore": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "optionalClientScopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "protocol": {
+                    "type": "string"
+                },
+                "protocolMappers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProtocolMapper"
+                    }
+                },
+                "publicClient": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "realmRoles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Role"
+                    }
+                },
+                "redirectUris": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "registrationAccessToken": {
+                    "type": "string"
+                },
+                "rootUrl": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                },
+                "serviceAccountsEnabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "standardFlowEnabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "surrogateAuthRequired": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "webOrigins": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "title": "Client"
+        },
+        "Column": {
+            "type": "object",
+            "title": "Column",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "Event": {
+            "type": "object",
+            "properties": {
+                "additionalContext": {
+                    "type": "string",
+                    "description": "Additional information about the event",
+                    "allowEmptyValue": false
+                },
+                "afterEventState": {
+                    "type": "string",
+                    "description": "state of the object before event",
+                    "allowEmptyValue": false
+                },
+                "authorName": {
+                    "type": "string",
+                    "description": "Name of the user who triggered the event",
+                    "allowEmptyValue": false
+                },
+                "authorUserId": {
+                    "type": "string",
+                    "description": "ID of the user who triggered the event (not exposed)",
+                    "allowEmptyValue": false
+                },
+                "beforeEventState": {
+                    "type": "string",
+                    "description": "state of the object before event",
+                    "allowEmptyValue": false
+                },
+                "createdOn": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Time in millis since the workbook device was created (using UTC offset)",
+                    "allowEmptyValue": false
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier representing the event",
+                    "allowEmptyValue": false
+                },
+                "remoteAddress": {
+                    "type": "string",
+                    "description": "IP Address of the user who triggered the event (not exposed)",
+                    "allowEmptyValue": false
+                },
+                "type": {
+                    "type": "string",
+                    "description": "The event type",
+                    "allowEmptyValue": false
+                },
+                "updatedOn": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Time in millis since the workbook device was updated (using UTC offset)",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "Event"
+        },
+        "ExternalLink": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "url": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "ExternalLink"
+        },
+        "File": {
+            "type": "object",
+            "properties": {
+                "absolute": {
+                    "type": "boolean"
+                },
+                "absoluteFile": {
+                    "$ref": "#/definitions/File"
+                },
+                "absolutePath": {
+                    "type": "string"
+                },
+                "canonicalFile": {
+                    "$ref": "#/definitions/File"
+                },
+                "canonicalPath": {
+                    "type": "string"
+                },
+                "directory": {
+                    "type": "boolean"
+                },
+                "executable": {
+                    "type": "boolean"
+                },
+                "file": {
+                    "type": "boolean"
+                },
+                "freeSpace": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "hidden": {
+                    "type": "boolean"
+                },
+                "lastModified": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parent": {
+                    "type": "string"
+                },
+                "parentFile": {
+                    "$ref": "#/definitions/File"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "readable": {
+                    "type": "boolean"
+                },
+                "totalSpace": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "usableSpace": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "writable": {
+                    "type": "boolean"
+                }
+            },
+            "title": "File"
+        },
+        "FileInfo": {
+            "type": "object",
+            "properties": {
+                "fileType": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "files": {
+                    "type": "array",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "title": "FileInfo"
+        },
+        "FileManagementConfig": {
+            "type": "object",
+            "properties": {
+                "api": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "category": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "clientId": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "description": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "fileExtensions": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "id": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "location": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "roleAccess": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "FileManagementConfig"
+        },
+        "InputStream": {
+            "type": "object",
+            "title": "InputStream"
+        },
+        "LicenseInfo": {
+            "type": "object",
+            "properties": {
+                "activationDate": {
+                    "type": "string",
+                    "description": "activationDate",
+                    "allowEmptyValue": false
+                },
+                "customerName": {
+                    "type": "string",
+                    "description": "customerName",
+                    "allowEmptyValue": false
+                },
+                "expirationDate": {
+                    "type": "string",
+                    "description": "expirationDate",
+                    "allowEmptyValue": false
+                },
+                "licenseType": {
+                    "type": "string",
+                    "description": "licenseType",
+                    "allowEmptyValue": false
+                },
+                "licensedProducts": {
+                    "type": "array",
+                    "description": "licensedProducts",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "productName": {
+                    "type": "string",
+                    "description": "productName",
+                    "allowEmptyValue": false
+                },
+                "releaseVersion": {
+                    "type": "string",
+                    "description": "releaseVersion",
+                    "allowEmptyValue": false
+                },
+                "validationResults": {
+                    "type": "object",
+                    "description": "validationResults",
+                    "allowEmptyValue": false,
+                    "additionalProperties": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "title": "LicenseInfo"
+        },
+        "LicenseUploadRequest": {
+            "type": "object",
+            "required": [
+                "encodedLicense"
+            ],
+            "properties": {
+                "encodedLicense": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "LicenseUploadRequest"
+        },
+        "LogoutRequest": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "LogoutRequest"
+        },
+        "ModelError": {
+            "type": "object",
+            "properties": {
+                "abbreviatedMessage": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "code": {
+                    "type": "string",
+                    "allowEmptyValue": false,
+                    "enum": [
+                        "unknown_error",
+                        "constraint_violation",
+                        "client_exists",
+                        "backup_restore_strategy_exists",
+                        "user_email_exists",
+                        "user_delete_not_allowed",
+                        "user_not_found",
+                        "user_update_not_found",
+                        "user_keycloak_id_not_found",
+                        "invalid_password",
+                        "invalid_password_history",
+                        "incorrect_email_or_password",
+                        "incorrect_current_password",
+                        "request_origin_incorrect_user_role",
+                        "user_account_locked",
+                        "backup_or_restore_in_progress",
+                        "backup_exists",
+                        "unable_to_delete",
+                        "upload_failed",
+                        "download_failed",
+                        "download_failed_does_not_exist",
+                        "upload_invalid_backup_file",
+                        "strategy_does_not_exist",
+                        "restore_failed",
+                        "file_does_not_exists",
+                        "file_exists",
+                        "keycloak_email_error",
+                        "invalid_smtp_connection",
+                        "ce_backup_failed",
+                        "server_not_reachable",
+                        "service_unavailable",
+                        "external_link_not_found",
+                        "max_external_links",
+                        "cannot_change_user_locality",
+                        "cannot_change_external_user_email",
+                        "external_user_not_found",
+                        "cannot_change_external_user_password",
+                        "cannot_assign_restricted_role",
+                        "insufficient_permission",
+                        "user_federation_not_found",
+                        "license_not_found",
+                        "license_content_error",
+                        "invalid_license",
+                        "application_not_supported",
+                        "unable_to_update_strategy",
+                        "internal_server_error"
+                    ]
+                },
+                "fields": {
+                    "type": "array",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "ModelError"
+        },
+        "NetworkInterface": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "NetworkInterface"
+        },
+        "Operation": {
+            "type": "object",
+            "required": [
+                "operationConnection",
+                "operationType"
+            ],
+            "properties": {
+                "arguments": {
+                    "type": "object",
+                    "description": "Arguments for the operation.",
+                    "allowEmptyValue": false,
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "command": {
+                    "type": "array",
+                    "description": "If docker exec command provide Docker engine exec command format <COMMAND> <OPTION> <ARGS>. ie [\"bin/bash\", \"-c\" \"cp a b\"]. For Local command it can simply be a string with the local command ie \"cp a b\"",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "commandInputRedirectFile": {
+                    "type": "string",
+                    "description": "The file location the command input will be redirected from.",
+                    "allowEmptyValue": false
+                },
+                "commandOutputRedirectFile": {
+                    "type": "string",
+                    "description": "The file location the command output will be redirected to.",
+                    "allowEmptyValue": false
+                },
+                "commandUser": {
+                    "type": "string",
+                    "description": "The user who will execute the command.",
+                    "allowEmptyValue": false
+                },
+                "commandWorkingDirectory": {
+                    "type": "string",
+                    "description": "The working directory of the operation command.",
+                    "allowEmptyValue": false
+                },
+                "destFilePath": {
+                    "type": "string",
+                    "description": "The destination file path to be copied to.",
+                    "allowEmptyValue": false
+                },
+                "host": {
+                    "type": "string",
+                    "description": "The host for the operation to be performed on.",
+                    "allowEmptyValue": false
+                },
+                "modifiableOperation": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Indicates if the operation is modifiable. By default all operation are readOnly unless specified.",
+                    "allowEmptyValue": false
+                },
+                "multiTarget": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Indicator if the command is multi target, meaning command will be sent to all containers starting with the hostname.",
+                    "allowEmptyValue": false
+                },
+                "operationConnection": {
+                    "type": "string",
+                    "description": "The operation connection type. (I.E. \"docker\", \"local\")",
+                    "allowEmptyValue": false,
+                    "enum": [
+                        "OperationConnection.DOCKER(value=docker)",
+                        "OperationConnection.LOCAL(value=local)",
+                        "OperationConnection.UNKNOWN(value=unknown)"
+                    ]
+                },
+                "operationDescription": {
+                    "type": "string",
+                    "description": "The operation description.",
+                    "allowEmptyValue": false
+                },
+                "operationName": {
+                    "type": "string",
+                    "description": "The operation name.",
+                    "allowEmptyValue": false
+                },
+                "operationType": {
+                    "type": "string",
+                    "description": "The operation type. (I.E. \"copy_to_backup\", \"restart_container\")",
+                    "allowEmptyValue": false,
+                    "enum": [
+                        "OperationType.EXEC(value=exec)",
+                        "OperationType.COPY_TO_BACKUP(value=copy_to_backup)",
+                        "OperationType.COPY_FROM_BACKUP(value=copy_from_backup)",
+                        "OperationType.COPY_FROM_PATH(value=copy_from_path)",
+                        "OperationType.RESTART_CONTAINER(value=restart_container)",
+                        "OperationType.UPDATE_CONTAINER(value=update_container)",
+                        "OperationType.UNKNOWN(value=unknown)"
+                    ]
+                },
+                "optionalStep": {
+                    "type": "string",
+                    "description": "The optional operations to be done with this operation",
+                    "allowEmptyValue": false
+                },
+                "restartRequired": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Indicates whether the container / host needs to be restarted",
+                    "allowEmptyValue": false
+                },
+                "srcFilePath": {
+                    "type": "string",
+                    "description": "The source file path to be copied.",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "Operation"
+        },
+        "PriorityClientId": {
+            "type": "object",
+            "properties": {
+                "clientId": {
+                    "type": "string",
+                    "description": "Id of the service that will be notified of suspend and resume in a prioritized manner.",
+                    "allowEmptyValue": false
+                },
+                "priority": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Integer that defines the priority of this client. This should be a unique integer among all the prioritized clients defined in the strategy. ",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "PriorityClientId"
+        },
+        "ProtocolMapper": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "type": "object",
+                    "allowEmptyValue": false,
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "protocol": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "protocolMapper": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "ProtocolMapper"
+        },
+        "Resource": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "file": {
+                    "$ref": "#/definitions/File"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "inputStream": {
+                    "$ref": "#/definitions/InputStream"
+                },
+                "open": {
+                    "type": "boolean"
+                },
+                "readable": {
+                    "type": "boolean"
+                },
+                "uri": {
+                    "$ref": "#/definitions/URI"
+                },
+                "url": {
+                    "$ref": "#/definitions/URL"
+                }
+            },
+            "title": "Resource"
+        },
+        "Role": {
+            "type": "object",
+            "properties": {
+                "clientRole": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "composite": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "containerId": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "description": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "id": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "label": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "Role"
+        },
+        "ServerInfo": {
+            "type": "object",
+            "properties": {
+                "buildNumber": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "version": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "ServerInfo"
+        },
+        "Setting": {
+            "type": "object",
+            "properties": {
+                "clientId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            },
+            "title": "Setting"
+        },
+        "Strategy": {
+            "type": "object",
+            "properties": {
+                "clientIds": {
+                    "type": "array",
+                    "description": "The list of client IDs required for suspending service.",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "operations": {
+                    "type": "array",
+                    "description": "The list of operations.",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "$ref": "#/definitions/Operation"
+                    }
+                },
+                "priorityClientIds": {
+                    "type": "array",
+                    "description": "The list of priority client IDs. These will be suspended before the clientIds list.",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "$ref": "#/definitions/PriorityClientId"
+                    }
+                }
+            },
+            "title": "Strategy"
+        },
+        "SwaggerDocsStatus": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "SwaggerDocsStatus"
+        },
+        "URI": {
+            "type": "object",
+            "properties": {
+                "absolute": {
+                    "type": "boolean"
+                },
+                "authority": {
+                    "type": "string"
+                },
+                "fragment": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "opaque": {
+                    "type": "boolean"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "rawAuthority": {
+                    "type": "string"
+                },
+                "rawFragment": {
+                    "type": "string"
+                },
+                "rawPath": {
+                    "type": "string"
+                },
+                "rawQuery": {
+                    "type": "string"
+                },
+                "rawSchemeSpecificPart": {
+                    "type": "string"
+                },
+                "rawUserInfo": {
+                    "type": "string"
+                },
+                "scheme": {
+                    "type": "string"
+                },
+                "schemeSpecificPart": {
+                    "type": "string"
+                },
+                "userInfo": {
+                    "type": "string"
+                }
+            },
+            "title": "URI"
+        },
+        "URL": {
+            "type": "object",
+            "properties": {
+                "authority": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "object"
+                },
+                "defaultPort": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "deserializedFields": {
+                    "$ref": "#/definitions/URLStreamHandler"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "protocol": {
+                    "type": "string"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "ref": {
+                    "type": "string"
+                },
+                "serializedHashCode": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "userInfo": {
+                    "type": "string"
+                }
+            },
+            "title": "URL"
+        },
+        "URLStreamHandler": {
+            "type": "object",
+            "title": "URLStreamHandler"
+        },
+        "User": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "roles",
+                "username"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "contact": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "createdBy": {
+                    "type": "string",
+                    "description": "The name of the user who created the user",
+                    "allowEmptyValue": false
+                },
+                "email": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "id": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "lastLoginTime": {
+                    "type": "string",
+                    "description": "The last successful login time",
+                    "allowEmptyValue": false
+                },
+                "localUser": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Whether or not this user is a local WaveSuite one or external to the system.",
+                    "allowEmptyValue": false
+                },
+                "loginAttemptLocked": {
+                    "type": "boolean",
+                    "example": false,
+                    "allowEmptyValue": false
+                },
+                "name": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "newPassword": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "numberOfFailedLoginAttempts": {
+                    "type": "string",
+                    "description": "The number of failed login attempts between the last successful login attempts",
+                    "allowEmptyValue": false
+                },
+                "password": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "roles": {
+                    "type": "array",
+                    "allowEmptyValue": false,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "allowEmptyValue": false,
+                    "enum": [
+                        "Active",
+                        "Disabled"
+                    ]
+                },
+                "updatedBy": {
+                    "type": "string",
+                    "description": "The name of the user who updated the user",
+                    "allowEmptyValue": false
+                },
+                "updatedOn": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Time in millis since the user was updated (using UTC offset)",
+                    "allowEmptyValue": false
+                },
+                "userPreferences": {
+                    "allowEmptyValue": false,
+                    "$ref": "#/definitions/UserPreferences"
+                },
+                "username": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "User"
+        },
+        "UserPreferences": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "preferences": {
+                    "type": "object",
+                    "allowEmptyValue": false,
+                    "additionalProperties": {
+                        "$ref": "#/definitions/ApplicationPreferences"
+                    }
+                }
+            },
+            "title": "UserPreferences",
+            "description": "JSON String that contains each user's displayed column settings per application per table"
+        },
+        "Warning": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "allowEmptyValue": false,
+                    "enum": [
+                        "INVALID_LICENSE",
+                        "INVALID_SMTP_SETTING",
+                        "LICENSE_EXPIRY_NEAR",
+                        "LICENSE_EXPIRES_TODAY",
+                        "LICENSE_EXPIRED",
+                        "WORK_ORDER_INVENTORY_LOW",
+                        "WORK_ORDER_LIMIT_REACHED",
+                        "WORK_ORDER_LIMIT_EXCEEDED",
+                        "COMMISSIONING_EXPERT_UNAVAILABLE",
+                        "INVALID_ZTP_SETTING",
+                        "DHCP_UNAVAILABLE",
+                        "SSL_CERTIFICATE_EXPIRED",
+                        "SSL_CERTIFICATE_EXPIRES_TODAY",
+                        "SSL_CERTIFICATE_EXPIRY_NEAR",
+                        "SSL_CERTIFICATE_EXPIRATION_ERROR"
+                    ]
+                },
+                "info": {
+                    "type": "string",
+                    "description": "Additional information pertaining to the warning",
+                    "allowEmptyValue": false
+                },
+                "level": {
+                    "type": "string",
+                    "allowEmptyValue": false,
+                    "enum": [
+                        "MINOR",
+                        "MAJOR",
+                        "CRITICAL"
+                    ]
+                }
+            },
+            "title": "Warning"
+        }
+    }
+}
